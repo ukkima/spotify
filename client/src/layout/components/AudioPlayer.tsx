@@ -39,5 +39,31 @@ export const AudioPlayer = () => {
     }
   }, [currentSong, isPlaying]);
 
+  useEffect(() => {
+    if (!currentSong) return;
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: currentSong.title,
+      artist: currentSong.artist,
+      artwork: [
+        {
+          src: currentSong.imageUrl,
+          sizes: "96x96",
+          type: "image/jpeg",
+        },
+        {
+          src: currentSong.imageUrl,
+          sizes: "256x256",
+          type: "image/jpeg",
+        },
+        {
+          src: currentSong.imageUrl,
+          sizes: "512x512",
+          type: "image/jpeg",
+        },
+      ],
+    });
+  }, [currentSong]);
+
   return <audio ref={audioRef} />;
 };
