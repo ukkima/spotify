@@ -10,7 +10,7 @@ export const axiosInstance = axios.create({
 export const setupAxiosInterceptors = (
   getToken: () => Promise<string | null>,
 ) => {
-  axiosInstance.interceptors.request.use(
+  const interceptorId = axiosInstance.interceptors.request.use(
     async (config) => {
       const token = await getToken();
       if (token) {
@@ -20,4 +20,6 @@ export const setupAxiosInterceptors = (
     },
     (error) => Promise.reject(error),
   );
+
+  return () => axiosInstance.interceptors.request.eject(interceptorId);
 };

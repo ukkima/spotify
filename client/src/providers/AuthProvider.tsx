@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const { initSocket, disconnectSocket } = useChatStore();
 
   useEffect(() => {
-    setupAxiosInterceptors(getToken);
+    const cleanUpInterceptor = setupAxiosInterceptors(getToken);
 
     const initAuth = async () => {
       try {
@@ -31,7 +31,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
     initAuth();
 
-    return () => disconnectSocket();
+    return () => {
+      cleanUpInterceptor();
+      disconnectSocket();
+    };
   }, [getToken, userId, checkAdminStatus, initSocket, disconnectSocket]);
 
   if (loading) {
