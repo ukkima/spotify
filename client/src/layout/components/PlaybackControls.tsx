@@ -185,11 +185,11 @@ export const PlaybackControls = () => {
                 switch (true) {
                   case volume === 0:
                     return <VolumeX className="h-4 w-4" />;
-                  case volume < 30:
+                  case volume < 40:
                     return <Volume1 className="h-4 w-4" />;
-                  case volume < 60:
+                  case volume < 80:
                     return <Volume2 className="h-4 w-4" />;
-                  case volume < 90:
+                  default:
                     return <Volume2 className="h-4 w-4" />;
                 }
               })()}
