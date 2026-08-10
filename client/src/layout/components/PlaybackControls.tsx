@@ -12,6 +12,8 @@ import {
   SkipBack,
   SkipForward,
   Volume1,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -179,7 +181,18 @@ export const PlaybackControls = () => {
               variant="ghost"
               className="hover:text-white text-zinc-400"
             >
-              <Volume1 className="h-4 w-4" />
+              {(() => {
+                switch (true) {
+                  case volume === 0:
+                    return <VolumeX className="h-4 w-4" />;
+                  case volume < 40:
+                    return <Volume1 className="h-4 w-4" />;
+                  case volume < 80:
+                    return <Volume2 className="h-4 w-4" />;
+                  default:
+                    return <Volume2 className="h-4 w-4" />;
+                }
+              })()}
             </Button>
 
             <Slider
