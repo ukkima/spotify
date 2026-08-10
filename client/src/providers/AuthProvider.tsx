@@ -1,17 +1,9 @@
-import { axiosInstance } from "@/lib/axios";
+import { setupAxiosInterceptors } from "@/lib/axios";
 import { useAuth } from "@clerk/react";
 import { useEffect, useState, type PropsWithChildren } from "react";
 import { Loader } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useChatStore } from "@/stores/useChatStore";
-
-const updateApiToken = (token: string | null) => {
-  if (token) {
-    axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  } else {
-    delete axiosInstance.defaults.headers.common["Authorization"];
-  }
-};
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const { getToken, userId } = useAuth();
@@ -20,17 +12,17 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const { initSocket, disconnectSocket } = useChatStore();
 
   useEffect(() => {
+    setupAxiosInterceptors(getToken);
+
     const initAuth = async () => {
       try {
         const token = await getToken();
 
-        updateApiToken(token);
         if (token) {
           await checkAdminStatus();
           if (userId) initSocket(userId);
         }
       } catch (error) {
-        updateApiToken(null);
         console.log("Error in authProvider", error);
       } finally {
         setLoading(false);
